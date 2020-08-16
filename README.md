@@ -1,7 +1,7 @@
 # Awesome PyTorch Tutorial
 
 ## Introduction
-This repository is built for praticing various PyTorch codes for beginners. <br/>
+This repository is built for practicing various PyTorch codes for beginners. <br/>
 The project file structure is motivated from [here](https://github.com/ChrisLee63/person_search). 
 
 
