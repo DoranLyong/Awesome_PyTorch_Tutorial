@@ -167,3 +167,9 @@ if __name__ == "__main__":
 
         #_Learning Rate Scheduler 
         scheduler.step(accuracy, epoch) # message when the 'lr' is reduced 
+
+    
+        
+        
+
+        
