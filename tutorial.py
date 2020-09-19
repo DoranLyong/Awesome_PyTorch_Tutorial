@@ -1,5 +1,12 @@
+import torch 
+
 from libs.data.fashion_mnist import * 
 from libs.utils.figure import plt 
+from libs.models.d2l_alexnet import d2l_AlexNet
+from libs.optim import optimizer, lr_scheduler
+from libs import engine
+
+
 
 
 
@@ -22,20 +29,44 @@ for idx, data in enumerate(test_iter):
 show_fashion_mnist(imgs, get_fashion_mnist_labels(lbls))
 
 
+
 """
-2. Build_model + optim + lr_scheduler 
+2. Build_model + optimizer + lr_scheduler 
 """
+net = d2l_AlexNet()
+
+# Model check 
+X = torch.randn(size=(1,1,224,224))
+
+for layer in net.model:
+    X=layer(X)
+    print(layer.__class__.__name__,'Output shape:\t',X.shape)
+
+
+optimizer = optimizer.build_optimizer(
+            model=net,
+            optim='adam',
+            lr=0.001,
+            weight_decay=5e-04,
+            )
+
+
+scheduler = lr_scheduler.build_lr_scheduler(
+            optimizer=optimizer,
+            lr_scheduler='single_step',
+            stepsize=20
+            )
 
 
 """
 3. Build_engine : 
-
 """
+engine = engine.ImageSoftmaxEngine()
+
 
 
 """
 4. Run training 
-
 """
 
 

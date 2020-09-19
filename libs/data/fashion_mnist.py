@@ -63,7 +63,6 @@ def show_fashion_mnist(images,labels):
     """
     
     _, figs = plt.subplots(1, len(images), figsize=(12, 12))
-    print(len(images))
     
     for f, img, lbl in zip(figs, images, labels):
         f.imshow(img.reshape((28, 28)).numpy())
