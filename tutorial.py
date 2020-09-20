@@ -14,7 +14,7 @@ from libs import engine
 """
 1. DataLoader 
 """
-train_iter, test_iter = load_data_fashion_mnist(batch_size=64, resize=224)
+train_iter, test_iter = load_data_fashion_mnist(batch_size=128, resize=224)
 
 print("num of train: " , len(train_iter.dataset))
 print("num of test: ", len(test_iter.dataset))
@@ -68,8 +68,8 @@ model = models.build_model(
 
 optimizer = optimizer.build_optimizer(
             model=net,
-            optim='sgd',
-            lr=0.001,
+            optim='adam',
+            lr=0.01,
             weight_decay=5e-04,
             )
 
