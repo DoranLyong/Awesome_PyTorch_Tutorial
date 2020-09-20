@@ -6,6 +6,7 @@ import time
 import logging
 import os.path as osp 
 import datetime
+from collections import OrderedDict
 
 import numpy as np 
 import torch 
@@ -14,13 +15,28 @@ import torch.nn.functional as F
 
 
 class Engine(object):
-    def __init__(self, use_gpu=True):
+    def __init__(self, datamanager, use_gpu=True):
 
+        self.datamanager = datamanager
         self.use_gpu = (torch.cuda.is_available() and use_gpu)
 
         self.model = None 
         self.optimizer = None 
         self.scheduler = None 
+
+        self._models = OrderedDict() 
+        self._optims = OrderedDict()
+        self._scheds = OrderedDict() # lr_schedule 
+
+    
+    def register_model(self, name='model', model=None, optim=None, schedule=None):
+        """
+        https://www.daleseo.com/python-collections-ordered-dict/
+        """
+        self._models[name] = model 
+        self._optims[name] = optim 
+        self._scheds[name] = schedule
+
 
 
     def run(self, 

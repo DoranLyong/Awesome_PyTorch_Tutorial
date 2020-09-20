@@ -12,5 +12,19 @@ class ImageSoftmaxEngine(Engine):
     Softmax-loss engine 
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, 
+        datamanager, 
+        model,
+        optimizer, 
+        scheduler=None, 
+        use_gpu=True,
+        label_smooth=True, 
+        ):
+        super(ImageSoftmaxEngine, self).__init__(datamanager, use_gpu)
+
+        self.model = model 
+        self.optimizer = optimizer
+        self.scheduler =scheduler
+        self.register_model(name='model', model=model, optim=optimizer, schedule=scheduler)
+
+        self.criterion = 
