@@ -14,7 +14,7 @@ from libs import engine
 """
 1. DataLoader 
 """
-train_iter, test_iter = load_data_fashion_mnist(batch_size=5)
+train_iter, test_iter = load_data_fashion_mnist(batch_size=64, resize=224)
 
 print("num of train: " , len(train_iter.dataset))
 print("num of test: ", len(test_iter.dataset))
@@ -32,7 +32,7 @@ for idx, data in enumerate(test_iter):
         break 
 
 print("batch_size: ", len(lbls[0]))
-show_fashion_mnist(imgs[0], get_fashion_mnist_labels(lbls[0]))
+#show_fashion_mnist(imgs[0], get_fashion_mnist_labels(lbls[0]))
 num_classes = 10
 
 
@@ -85,7 +85,7 @@ scheduler = lr_scheduler.build_lr_scheduler(
 3. Build_engine : 
 """
 engine = engine.ImageNLLEngine(
-        datamanager=None, 
+        datamanager=train_iter, 
         model=model, 
         optimizer=optimizer,
         scheduler=scheduler,
@@ -95,7 +95,7 @@ engine = engine.ImageNLLEngine(
 
 
 """
-4. Run training 
+4. Run training & Testing 
 """
 engine.run(
     save_dir='log', 

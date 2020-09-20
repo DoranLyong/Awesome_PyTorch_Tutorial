@@ -2,14 +2,22 @@
 [1] code source: https://github.com/KaiyangZhou/deep-person-reid/blob/master/torchreid/engine/image/softmax.py
 [2] code source: https://github.com/dsgiitr/d2l-pytorch/blob/master/d2l/train.py
 """
+import logging
 
+import coloredlogs
+import torch.nn as nn 
+
+from ...data.fashion_mnist import *
 from ..engine import Engine
+from ...metrics import accuracy
 
+coloredlogs.install(level="INFO", fmt="%(asctime)s %(filename)s %(levelname)s %(message)s")
 
 
 class ImageNLLEngine(Engine):
     """
-    Negative Log-likelihood loss 
+    CrossEntropyLoss == log_softmax + nll_loss 
+    [ref] https://discuss.pytorch.org/t/is-log-softmax-nllloss-crossentropyloss/9352
     """
 
     def __init__(self, 
@@ -27,9 +35,36 @@ class ImageNLLEngine(Engine):
         self.scheduler = scheduler
         self.register_model(name='model', model=model, optim=optimizer, schedule=scheduler)
 
-        #self.criterion = 
+        self.criterion = nn.CrossEntropyLoss()
 
 
 
     def forward_backward(self, data):
-        imgs, lbls = self.parse_data_for_train(data)
+        imgs, lbls = data
+#        show_fashion_mnist(imgs, get_fashion_mnist_labels(lbls))
+
+        print("input shape: ", imgs.shape )
+        print("lable shape: ", lbls.shape)
+
+        if self.use_gpu:
+            imgs = imgs.cuda() 
+            lbls = lbls.cuda() 
+
+        outputs = self.model(imgs)
+        loss = self.compute_loss(self.criterion, outputs, lbls)
+
+        
+        # _Start: backpropagation & update
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+
+        loss_summary = {
+            'loss' : loss.item(), 
+            'acc' : accuracy(outputs, lbls)
+        }
+
+        return loss_summary
+
+
+        
