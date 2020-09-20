@@ -7,8 +7,10 @@ import torch.nn as nn
 
 
 class d2l_AlexNet(nn.Module):
-    def __init__(self, **kwargs):
-        super(d2l_AlexNet,self).__init__(**kwargs) 
+    def __init__(self,  num_classes=10,loss='softmax' ):
+        super(d2l_AlexNet,self).__init__() 
+
+        self.loss = loss
 
         self.model = nn.Sequential(
                     # 11x11 Conv, s=4, #96 
@@ -45,8 +47,8 @@ class d2l_AlexNet(nn.Module):
                     nn.Linear(in_features=4096, out_features=4096),
                     nn.ReLU(),
 
-                    # Linear
-                    nn.Linear(in_features=4096, out_features=10),
+                    # Classifier 
+                    nn.Linear(in_features=4096, out_features=num_classes),
                     )
 
     def forward(self, x):

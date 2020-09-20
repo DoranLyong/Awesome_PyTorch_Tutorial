@@ -37,6 +37,15 @@ class Engine(object):
         self._optims[name] = optim 
         self._scheds[name] = schedule
 
+    
+    def parse_data_for_train(self, data):
+        imgs = [] # images 
+        lbls = [] # labels
+
+        
+
+        return imgs, lbls
+
 
 
     def run(self, 

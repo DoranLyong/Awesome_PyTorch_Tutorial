@@ -7,9 +7,9 @@ from ..engine import Engine
 
 
 
-class ImageSoftmaxEngine(Engine):
+class ImageNLLEngine(Engine):
     """
-    Softmax-loss engine 
+    Negative Log-likelihood loss 
     """
 
     def __init__(self, 
@@ -20,11 +20,16 @@ class ImageSoftmaxEngine(Engine):
         use_gpu=True,
         label_smooth=True, 
         ):
-        super(ImageSoftmaxEngine, self).__init__(datamanager, use_gpu)
+        super(ImageNLLEngine, self).__init__(datamanager, use_gpu)
 
         self.model = model 
         self.optimizer = optimizer
-        self.scheduler =scheduler
+        self.scheduler = scheduler
         self.register_model(name='model', model=model, optim=optimizer, schedule=scheduler)
 
-        self.criterion = 
+        #self.criterion = 
+
+
+
+    def forward_backward(self, data):
+        imgs, lbls = self.parse_data_for_train(data)
