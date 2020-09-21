@@ -1,10 +1,14 @@
 """
 code source: https://github.com/KaiyangZhou/deep-person-reid/blob/master/torchreid/optim/optimizer.py
 """
+import logging
 
+
+import coloredlogs
 import torch 
 import torch.nn as nn 
 
+coloredlogs.install(level="INFO", fmt="%(asctime)s %(filename)s %(levelname)s %(message)s")
 
 #_Available options
 AVAI_OPTIMS = ['adam',  'sgd', ] 
@@ -14,7 +18,7 @@ def build_optimizer(
     model, 
     optim='adam',
     lr = 0.001,
-    weight_decay = 0.0005, 
+    weight_decay = 0, 
     momentum=0.9,
     sgd_dampening=0,
     sgd_nesterov=False,
@@ -59,6 +63,8 @@ def build_optimizer(
             dampening=sgd_dampening,
             nesterov=sgd_nesterov,
             )
+    
+    logging.info("Optimizer is selected as :{}".format(optimizer))
 
     return optimizer
 

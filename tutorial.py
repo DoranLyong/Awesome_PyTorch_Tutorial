@@ -68,9 +68,10 @@ model = models.build_model(
 
 optimizer = optimizer.build_optimizer(
             model=model,
-            optim='adam',
+            optim='sgd',
             lr=0.01,
-            weight_decay=5e-04,
+            weight_decay=0,
+            momentum=0,
             )
 
 
@@ -79,6 +80,7 @@ scheduler = lr_scheduler.build_lr_scheduler(
             lr_scheduler='single_step',
             stepsize=20
             )
+
 
 
 
@@ -101,7 +103,7 @@ engine = engine.ImageNLLEngine(
 """
 engine.run(
     save_dir='log', 
-    max_epoch=60, 
+    max_epoch=5, 
     eval_freq=10, 
     print_freq=10, 
     test_only=False,

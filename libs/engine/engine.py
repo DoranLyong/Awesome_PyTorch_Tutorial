@@ -34,6 +34,10 @@ class Engine(object):
         self._optims = OrderedDict()
         self._scheds = OrderedDict() # lr_schedule 
 
+
+        if use_gpu and torch.cuda.is_available(): 
+            self.device = torch.device('cuda:0')
+
     
     def register_model(self, name='model', model=None, optim=None, schedule=None):
         """
@@ -96,10 +100,20 @@ class Engine(object):
 
     def train(self, print_freq=10, fixbase_epoch=0, open_layers=None):
         
-        for data in tqdm(self.datamanager):
-            loss_summary = self.forward_backward(data)
-        
-        logging.info("Loss: {} ".format(loss_summary))
+        train_l_sum = torch.tensor([0.0], dtype=torch.float32,).cuda()
+        train_acc_sum = torch.tensor([0.0], dtype=torch.float32,).cuda()
+        n = 0 
+        for X, y in tqdm(self.datamanager):
+            loss_summary = self.forward_backward(X, y, mode='train')
+
+            with torch.no_grad():
+                y = y.long()
+                train_l_sum += loss_summary['loss'].float()
+#                train_acc_sum += (torch.sum((torch.argmax(loss_summary['outputs'], dim=1)==y))).float()
+                n += y.shape[0]
+
+                
+        logging.info("Loss: %.4f " %(train_l_sum/n))
 
 
 

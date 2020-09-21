@@ -5,6 +5,7 @@
 import logging
 
 import coloredlogs
+import torch 
 import torch.nn as nn 
 
 from ...data.fashion_mnist import *
@@ -39,8 +40,8 @@ class ImageNLLEngine(Engine):
 
 
 
-    def forward_backward(self, data):
-        imgs, lbls = data
+    def forward_backward(self, X, y, mode='train'):
+        imgs, lbls = X, y
 #        show_fashion_mnist(imgs, get_fashion_mnist_labels(lbls))
 
 #        print("input shape: ", imgs.shape )
@@ -51,8 +52,15 @@ class ImageNLLEngine(Engine):
             lbls = lbls.cuda() 
             self.model = self.model.cuda()
 
+        if mode =='train':
+            self.model.train()  # Switch to training mode 
+
+        else: 
+            self.model.eval()
+
         outputs = self.model(imgs)
-        loss = self.compute_loss(self.criterion, outputs, lbls)
+#        loss = self.compute_loss(self.criterion, outputs, lbls)
+        loss = self.criterion(outputs, lbls)
 
         
         # _Start: backpropagation & update
@@ -60,10 +68,13 @@ class ImageNLLEngine(Engine):
         loss.backward()
         self.optimizer.step()
 
-        loss_summary = {
-            'loss' : loss.item(), 
-            'acc' : accuracy(outputs, lbls)
-        }
+#        loss_summary = {
+#            'loss' : loss.item(), 
+#            'acc' : accuracy(outputs, lbls)
+#        }
+
+
+        loss_summary = {'loss':loss, 'outputs':outputs}
 
         return loss_summary
 
