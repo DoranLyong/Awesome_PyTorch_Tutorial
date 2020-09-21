@@ -43,12 +43,13 @@ class ImageNLLEngine(Engine):
         imgs, lbls = data
 #        show_fashion_mnist(imgs, get_fashion_mnist_labels(lbls))
 
-        print("input shape: ", imgs.shape )
-        print("lable shape: ", lbls.shape)
+#        print("input shape: ", imgs.shape )
+#        print("label shape: ", lbls.shape)
 
         if self.use_gpu:
             imgs = imgs.cuda() 
             lbls = lbls.cuda() 
+            self.model = self.model.cuda()
 
         outputs = self.model(imgs)
         loss = self.compute_loss(self.criterion, outputs, lbls)

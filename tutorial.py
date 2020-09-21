@@ -67,7 +67,7 @@ model = models.build_model(
 
 
 optimizer = optimizer.build_optimizer(
-            model=net,
+            model=model,
             optim='adam',
             lr=0.01,
             weight_decay=5e-04,
@@ -81,9 +81,11 @@ scheduler = lr_scheduler.build_lr_scheduler(
             )
 
 
+
 """
 3. Build_engine : 
 """
+
 engine = engine.ImageNLLEngine(
         datamanager=train_iter, 
         model=model, 

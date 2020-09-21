@@ -9,6 +9,7 @@ import datetime
 from collections import OrderedDict
 
 import coloredlogs
+from tqdm import tqdm
 import numpy as np 
 import torch 
 import torch.nn.functional as F 
@@ -95,9 +96,10 @@ class Engine(object):
 
     def train(self, print_freq=10, fixbase_epoch=0, open_layers=None):
         
-        for batch_idx, data in enumerate(self.datamanager):
+        for data in tqdm(self.datamanager):
             loss_summary = self.forward_backward(data)
-            logging.info("Loss: {} ".format(loss_summary))
+        
+        logging.info("Loss: {} ".format(loss_summary))
 
 
 

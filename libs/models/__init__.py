@@ -50,7 +50,13 @@ def build_model(
 
 
 
-    built_model = __model_factory[model_name]( num_classes=10, loss=loss)
+    built_model = __model_factory[model_name]( num_classes=10 )
+
+    def init_weights(m):
+        if type(m) == nn.Linear or type(m) == nn.Conv2d:
+            torch.nn.init.xavier_uniform_(m.weight)
+
+    built_model.apply(init_weights)
 
 
     return built_model
