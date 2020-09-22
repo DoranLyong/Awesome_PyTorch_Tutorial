@@ -24,6 +24,7 @@ class Engine(object):
 
         self.datamanager = datamanager
         self.use_gpu = (torch.cuda.is_available() and use_gpu)
+        self.device = torch.device("cuda" if self.use_gpu else "cpu")
         self.epoch = 0
 
         self.model = None 
@@ -35,8 +36,7 @@ class Engine(object):
         self._scheds = OrderedDict() # lr_schedule 
 
 
-        if use_gpu and torch.cuda.is_available(): 
-            self.device = torch.device('cuda:0')
+        
 
     
     def register_model(self, name='model', model=None, optim=None, schedule=None):
@@ -100,8 +100,8 @@ class Engine(object):
 
     def train(self, print_freq=10, fixbase_epoch=0, open_layers=None):
         
-        train_l_sum = torch.tensor([0.0], dtype=torch.float32,).cuda()
-        train_acc_sum = torch.tensor([0.0], dtype=torch.float32,).cuda()
+        train_l_sum = torch.tensor([0.0], dtype=torch.float32, device=self.device)
+        train_acc_sum = torch.tensor([0.0], dtype=torch.float32,device=self.device)
         n = 0 
         for X, y in tqdm(self.datamanager):
             loss_summary = self.forward_backward(X, y, mode='train')
